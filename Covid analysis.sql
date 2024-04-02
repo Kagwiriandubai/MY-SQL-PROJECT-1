@@ -32,12 +32,13 @@ ORDER BY 1,2,3
 --Looking at countries with the highest infection rate
 
 
-SELECT location,population,MAX(total_cases) AS HighestInfectionCount, MAX((total_deaths/total_cases)*100) AS
-PercentagePopulationAffected
+SELECT --date,
+location,population,MAX(total_cases) AS HighestInfectionCount, MAX((total_deaths/total_cases)*100) AS
+PercentagePopulationIffected
 FROM dbo.CovidDeaths$
 --WHERE location LIKE '%states%'
-GROUP BY location, population
-ORDER BY PercentagePopulationAffected DESC
+GROUP BY location, population --,date
+ORDER BY PercentagePopulationIffected DESC
 
 --showing continet with highest death count per population
 
@@ -50,16 +51,17 @@ GROUP BY location
 ORDER BY HighestDeathCount DESC
 
 ---Global Numbers for new cases, total deaths and infection percentage 
-SELECT date, SUM(new_cases) AS TotalNewCases, SUM(CAST(total_deaths AS INT)) AS TotalDeaths, 
-(SUM(new_cases)/SUM(CAST(total_deaths AS INT)))*100 AS InfectionPercentage
+SELECT continent,-- SUM(new_cases) AS TotalNewCases,
+SUM(CAST(total_deaths AS INT)) AS TotalDeaths 
+--(SUM(new_cases)/SUM(CAST(total_deaths AS INT)))*100 AS InfectionPercentage
 FROM dbo.CovidDeaths$
 WHERE continent is not null
-GROUP BY date
-Order By 1, 2
+GROUP BY continent
+Order By TotalDeaths DESC 
 
 ----total deaths,total newcases and infection percentage 
-SELECT SUM(new_cases) AS TotalNewCases, SUM(CAST(total_deaths AS INT)) AS TotalDeaths, 
-(SUM(new_cases)/SUM(CAST(total_deaths AS INT)))*100 AS InfectionPercentage
+SELECT SUM(total_cases) AS TotalCases, SUM(CAST(total_deaths AS INT)) AS TotalDeaths, 
+(SUM(CAST(total_deaths AS INT))/SUM(total_cases))*100 AS InfectionPercentage
 FROM dbo.CovidDeaths$
 WHERE continent is not null
 ---GROUP BY date
